@@ -1,5 +1,19 @@
+import java.math.BigInteger;
+
 public class Main
 {
+    public static void main (String [] args)
+    {
+        String hexPrimeMod;
+        String hexGenerator;
+
+        BigInteger primeMod;
+        BigInteger generator;
+
+        byte [] zip;
+
+    }
+
     /*El Gamal key pair
     //generate x
     x 1 < x < p-1
@@ -20,9 +34,5 @@ public class Main
      */
 
     // sign checker
-    
-    public static void main (String [] args)
-    {
 
-    }
 }
