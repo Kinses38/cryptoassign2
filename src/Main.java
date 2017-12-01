@@ -52,10 +52,9 @@ class Signature
            randS = genS();
         }while(randS.equals(BigInteger.ZERO));
 
-        System.out.println("privKey: " + privKey.toString(16));
+
         System.out.println("pubKey: " + pubKey.toString(16));
 
-        System.out.println("K: " + randK.toString(16));
         System.out.println("R: " + randR.toString(16));
         System.out.println("S: " + randS.toString(16));
 
@@ -135,10 +134,7 @@ class Signature
         BigInteger[] results = new BigInteger[3];
         if(b.equals(BigInteger.ZERO))
         {
-            results[0] = a;
-            results[1] = BigInteger.ONE;
-            results[2] = BigInteger.ZERO;
-            return results;
+            return new BigInteger[] {a, BigInteger.ONE, BigInteger.ZERO};
         }
 
         results = extGCD(b, a.mod(b));
