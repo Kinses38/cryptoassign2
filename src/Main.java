@@ -63,10 +63,10 @@ class Signature
 
 
     // 1 < x < p-1
-    public BigInteger genPrivKey()
+    private BigInteger genPrivKey()
     {
         BigInteger randomX = new BigInteger(primeMod.bitLength(), RANDOM);
-        while (randomX.compareTo(primeMod) == 1 || (randomX.compareTo(BigInteger.ONE)) < 1)
+        while (randomX.compareTo(pMinusOne) == 1 || (randomX.compareTo(BigInteger.ONE)) < 1)
         {
             randomX = new BigInteger(primeMod.bitLength(), RANDOM);
         }
@@ -74,12 +74,12 @@ class Signature
     }
 
     //y = g^x(mod p)
-    public BigInteger genPubKey()
+    private BigInteger genPubKey()
     {
         return generator.modPow(privKey, primeMod);
     }
 
-    public BigInteger getGCD(BigInteger a, BigInteger b)
+    private BigInteger getGCD(BigInteger a, BigInteger b)
     {
         if(b.equals(BigInteger.ZERO))
             return a;
@@ -88,7 +88,7 @@ class Signature
     }
 
     //generate k, check if prime && < primeMod
-    public BigInteger genK()
+    private BigInteger genK()
     {
         BigInteger randomK = new BigInteger(primeMod.bitLength(), 1, RANDOM);
         boolean goodK = false;
@@ -96,18 +96,18 @@ class Signature
         {
             randomK = new BigInteger(primeMod.bitLength(), 1, RANDOM);
             if(getGCD(randomK, pMinusOne).equals(BigInteger.ONE))
-                if(randomK.compareTo(pMinusOne) == 1)
+                if(randomK.compareTo(pMinusOne) == -1)
                     goodK = true;
         }
         return randomK;
     }
 
-    public BigInteger genR()
+    private BigInteger genR()
     {
         return generator.modPow(randK, primeMod);
     }
 
-    public byte [] hashFile()
+    private byte [] hashFile()
     {
         try
         {
@@ -166,13 +166,15 @@ class Signature
             System.out.println("0 < S < P-1");
 
         //Lets just input the sha256 checksum here to check...oh wait..
-        BigInteger hOfM = new BigInteger (hashFile());
+        BigInteger hOfM = new BigInteger(hashFile());
 
         //g^h(m)(mod p) = ((y^r)(r^s))(mod p)
         BigInteger LHS = generator.modPow(hOfM, primeMod);
         BigInteger RHS = (pubKey.modPow(randR, primeMod)).multiply(randR.modPow(randS, primeMod)).mod(primeMod);
-        if(LHS.equals(RHS))
-            System.out.println("LHS == RHS");
+        if(LHS.compareTo(RHS) == 0)
+            System.out.println("LHS == RHS -- Digital Signature Verified");
+        System.out.println(LHS.toString(16));
+        System.out.println(RHS.toString(16));
     }
 
 }
